@@ -1,3 +1,4 @@
+#!/bin/bash
 appHost=${1:-localhost}
 appPort=${2:-8080}
 
