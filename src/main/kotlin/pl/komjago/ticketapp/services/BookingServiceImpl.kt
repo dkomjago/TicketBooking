@@ -2,6 +2,7 @@ package pl.komjago.ticketapp.services
 
 import org.joda.money.Money
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import pl.komjago.ticketapp.controllers.booking.dto.BookedSeatInfo
 import pl.komjago.ticketapp.controllers.booking.dto.ChooseScreeningOutput
@@ -57,9 +58,7 @@ class BookingServiceImpl(
     }
 
     override fun chooseScreening(screeningId: Long): ChooseScreeningOutput {
-        val screeningOptional = screeningRepository.findById(screeningId)
-        val screening = if (screeningOptional.isPresent) screeningOptional.get()
-        else throw IllegalArgumentException("Invalid screeningId")
+        val screening = screeningRepository.findByIdOrNull(screeningId) ?: throw IllegalArgumentException("Invalid screeningId")
 
         val bookedSeats = ticketRepository.findAllByScreeningId(screeningId).map { it.seat }
 
@@ -90,29 +89,24 @@ class BookingServiceImpl(
     }
 
     override fun makeReservation(makeReservationInput: MakeReservationInput): MakeReservationOutput {
-        //Check if seat list input is empty
+
         if (makeReservationInput.selectedSeats.isEmpty()) {
             throw IllegalArgumentException("No seat selected")
         }
 
-        //Check for duplicated seats
         if (makeReservationInput.selectedSeats.groupingBy { it.seatId }.eachCount().any { it.value > 1 }) {
             throw IllegalArgumentException("Duplicated seatId")
         }
 
-        val screeningOptional = screeningRepository.findById(makeReservationInput.screeningId)
-        val screening = if (screeningOptional.isPresent) screeningOptional.get() else throw EntityNotFoundException()
+        val screening= screeningRepository.findByIdOrNull(makeReservationInput.screeningId) ?: throw EntityNotFoundException("Invalid screeningId")
 
-        //Check if bookingEndsBeforeScreeningInMinutes or more minutes before screening
         if (LocalDateTime.now().plusMinutes(bookingEndsBeforeScreeningInMinutes).isAfter(screening.startingTime)) {
             throw IllegalArgumentException("$bookingEndsBeforeScreeningInMinutes minutes before screening")
         }
 
         fun unpackSeatInfo(seatInfo: BookedSeatInfo): Pair<Seat, TicketType> {
-            val seatOptional = seatRepository.findById(seatInfo.seatId)
-            val seat = if (seatOptional.isPresent) seatOptional.get() else throw EntityNotFoundException("Invalid seatId")
-            val ticketTypeOptional = ticketTypeRepository.findById(seatInfo.ticketTypeId)
-            val ticketType = if (ticketTypeOptional.isPresent) ticketTypeOptional.get() else throw EntityNotFoundException("Invalid ticketTypeId")
+            val seat = seatRepository.findByIdOrNull(seatInfo.seatId) ?: throw EntityNotFoundException("Invalid seatId")
+            val ticketType = ticketTypeRepository.findByIdOrNull(seatInfo.ticketTypeId) ?: throw EntityNotFoundException("Invalid ticketTypeId")
             return Pair(seat, ticketType)
         }
 
