@@ -61,19 +61,24 @@ class ScreeningRepositoryTests @Autowired constructor(private val screeningRepos
     }
 
     @Test
-    fun `find all movies between given LocalDateTimes`() {
-        var screeningList = screeningRepository.findAll()
-        //should contain elements
+    fun `find all movies between contains elements`() {
+        val screeningList = screeningRepository.findAll()
         assertFalse(screeningList.isEmpty())
+    }
 
-        screeningList = screeningRepository.findAllByStartingTimeBetween(
+    @Test
+    fun `find all movies between LocalDateTimes returns limited screenings subset`() {
+        val screeningList = screeningRepository.findAllByStartingTimeBetween(
                 LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusDays(2))
 
         //shouldn't contain 2nd screening
         assertFalse(screeningList.any { it.movie.title == testMovieTitle1 })
+    }
 
-        screeningList = screeningRepository.findAllByStartingTimeBetween(
+    @Test
+    fun `find all movies between LocalDateTimes returns limited all screenings`() {
+        val screeningList = screeningRepository.findAllByStartingTimeBetween(
                 LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2))
 
