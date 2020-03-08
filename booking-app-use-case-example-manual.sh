@@ -3,7 +3,7 @@ appHost=${1:-localhost}
 appPort=${2:-8080}
 
 printf "\n///\nSTART\n///\n"
-curl -sS -X POST "http://$appHost:$appPort/api/booking/screenings" -H  "accept: */*" -H  "Content-Type: application/json" -d "{  \"from\": \"2016-11-16 06:43\",  \"to\": \"2020-11-16 06:43\"}"
+curl -sS -X GET "http://$appHost:$appPort/api/booking/screenings/api/booking/screenings?from=2016-11-16%2006%3A43&to=2020-11-16%2006%3A43" -H  "accept: */*"
 printf "\n!!!Please enter screening id!!!\n"
 read -r screeningId
 curl -sS -X GET "http://$appHost:$appPort/api/booking/screening/$screeningId" -H  "accept: */*"
