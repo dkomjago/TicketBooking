@@ -52,7 +52,7 @@ class BookingServiceTests {
             )
 
     @Test
-    fun `get screenings with GetScreeningsInput returns GetScreeningsOutput sorted by title and screening time`() {
+    fun `get screenings with from and to dates returns GetScreeningsOutput sorted by title and screening time`() {
 
         //region create expected output
         val movie = Movie(null,
@@ -116,7 +116,7 @@ class BookingServiceTests {
     }
 
     @Test
-    fun `get screenings with GetScreeningsInput finds no screenings throws IllegalStateException`() {
+    fun `get screenings with from and to dates finds no screenings throws IllegalStateException`() {
         val input = LocalDateTime.now()
 
         //region repository mocking

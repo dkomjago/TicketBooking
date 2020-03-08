@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.post
 import pl.komjago.ticketapp.TicketBookingApplication
 import pl.komjago.ticketapp.controllers.booking.dto.BookedSeatInfo
 import pl.komjago.ticketapp.controllers.booking.dto.ChooseScreeningOutput
-import pl.komjago.ticketapp.controllers.booking.dto.GetScreeningsInput
 import pl.komjago.ticketapp.controllers.booking.dto.GetScreeningsOutput
 import pl.komjago.ticketapp.controllers.booking.dto.MakeReservationInput
 import pl.komjago.ticketapp.controllers.booking.dto.MakeReservationOutput
@@ -41,7 +40,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
     private lateinit var service: BookingService
 
     @Test
-    fun `get screenings with GetScreeningsInput returns GetScreeningsOutput responds with OK`() {
+    fun `get screenings with from and to dates returns GetScreeningsOutput responds with OK`() {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         val input = LocalDateTime.now().format(formatter)
         val expectedOutput = GetScreeningsOutput(List(2) {
@@ -65,7 +64,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
     }
 
     @Test
-    fun `get screenings with GetScreeningsInput catches IllegalStateException responds with NO CONTENT`() {
+    fun `get screenings with from and to dates catches IllegalStateException responds with NO CONTENT`() {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         val input = LocalDateTime.now().format(formatter)
 
