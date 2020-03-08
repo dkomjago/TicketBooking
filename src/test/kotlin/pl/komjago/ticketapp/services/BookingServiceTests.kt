@@ -170,8 +170,7 @@ class BookingServiceTests {
                         144
                 ),
                 RoomInfo("testroom",
-                        listOf(SeatInfo(1, 1, 1, false)),
-                        1
+                        listOf(SeatInfo(1, 1, 1, false))
                 ),
                 screening.startingTime,
                 listOf(ticketTypeInfo)

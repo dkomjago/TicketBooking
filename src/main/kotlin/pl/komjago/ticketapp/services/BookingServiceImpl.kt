@@ -75,8 +75,7 @@ class BookingServiceImpl(
             RoomInfo(room.name,
                     room.seats.map { seat ->
                         SeatInfo(seat.id!!, seat.seatRow, seat.seatNumber, bookedSeats.contains(seat))
-                    },
-                    room.seatCount
+                    }
             )
         }
 

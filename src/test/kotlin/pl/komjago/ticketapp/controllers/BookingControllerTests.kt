@@ -121,8 +121,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
                         144
                 ),
                 RoomInfo("testroom",
-                        listOf(SeatInfo(1, 1, 1, false)),
-                        1
+                        listOf(SeatInfo(1, 1, 1, false))
                 ),
                 screening.startingTime,
                 listOf(ticketTypeInfo)
