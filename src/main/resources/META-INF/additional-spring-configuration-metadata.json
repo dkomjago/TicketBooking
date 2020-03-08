@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "bookingEndsBeforeScreeningInMinutes",
+      "type": "java.lang.Long",
+      "description": "Time in minutes before screening starts after which users can no longer book tickets."
+  }
+] }
