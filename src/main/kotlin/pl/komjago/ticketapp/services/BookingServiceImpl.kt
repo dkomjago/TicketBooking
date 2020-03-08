@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import pl.komjago.ticketapp.controllers.booking.dto.BookedSeatInfo
 import pl.komjago.ticketapp.controllers.booking.dto.ChooseScreeningOutput
-import pl.komjago.ticketapp.controllers.booking.dto.GetScreeningsInput
 import pl.komjago.ticketapp.controllers.booking.dto.GetScreeningsOutput
 import pl.komjago.ticketapp.controllers.booking.dto.MakeReservationInput
 import pl.komjago.ticketapp.controllers.booking.dto.MakeReservationOutput
@@ -41,10 +40,10 @@ class BookingServiceImpl(
 ) : BookingService {
 
 
-    override fun getScreenings(getScreeningsInput: GetScreeningsInput): GetScreeningsOutput {
+    override fun getScreenings(from: LocalDateTime, to: LocalDateTime): GetScreeningsOutput {
         val screenings: List<Screening> = screeningRepository.findAllByStartingTimeBetween(
-                getScreeningsInput.from,
-                getScreeningsInput.to
+                from,
+                to
         )
         if (screenings.isEmpty()) throw IllegalStateException("No screenings found in given time frame")
 

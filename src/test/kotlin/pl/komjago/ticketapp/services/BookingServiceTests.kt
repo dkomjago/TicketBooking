@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import pl.komjago.ticketapp.controllers.booking.dto.BookedSeatInfo
 import pl.komjago.ticketapp.controllers.booking.dto.ChooseScreeningOutput
-import pl.komjago.ticketapp.controllers.booking.dto.GetScreeningsInput
 import pl.komjago.ticketapp.controllers.booking.dto.GetScreeningsOutput
 import pl.komjago.ticketapp.controllers.booking.dto.MakeReservationInput
 import pl.komjago.ticketapp.controllers.booking.dto.MakeReservationOutput
@@ -54,7 +53,6 @@ class BookingServiceTests {
 
     @Test
     fun `get screenings with GetScreeningsInput returns GetScreeningsOutput sorted by title and screening time`() {
-        val input = GetScreeningsInput(LocalDateTime.MIN, LocalDateTime.MAX)
 
         //region create expected output
         val movie = Movie(null,
@@ -109,25 +107,25 @@ class BookingServiceTests {
         //endregion
 
         //region repository mocking
-        every { screeningRepository.findAllByStartingTimeBetween(input.from, input.to) } returns screeningList
+        every { screeningRepository.findAllByStartingTimeBetween(LocalDateTime.MIN, LocalDateTime.MAX) } returns screeningList
         every { ticketRepository.countAllByScreeningId(any()) } returns 0
         //endregion
 
         assertNotEquals(expectedOutputUnsorted, expectedOutputSorted)
-        assertEquals(expectedOutputSorted, bookingService.getScreenings(input))
+        assertEquals(expectedOutputSorted, bookingService.getScreenings(LocalDateTime.MIN, LocalDateTime.MAX))
     }
 
     @Test
     fun `get screenings with GetScreeningsInput finds no screenings throws IllegalStateException`() {
-        val input = GetScreeningsInput(LocalDateTime.now(), LocalDateTime.now())
+        val input = LocalDateTime.now()
 
         //region repository mocking
-        every { screeningRepository.findAllByStartingTimeBetween(input.from, input.to) } returns emptyList()
+        every { screeningRepository.findAllByStartingTimeBetween(input,input) } returns emptyList()
         every { ticketRepository.countAllByScreeningId(any()) } returns 0
         //endregion
 
         assertThrows(IllegalStateException::class.java) {
-            bookingService.getScreenings(input)
+            bookingService.getScreenings(input,input)
         }
     }
 

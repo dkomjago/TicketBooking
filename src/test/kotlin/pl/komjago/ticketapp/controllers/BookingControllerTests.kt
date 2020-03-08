@@ -30,6 +30,7 @@ import pl.komjago.ticketapp.entity.TicketType
 import pl.komjago.ticketapp.services.BookingService
 import pl.komjago.ticketapp.util.toZloty
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.persistence.EntityNotFoundException
 
 @WebMvcTest
@@ -41,17 +42,17 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
 
     @Test
     fun `get screenings with GetScreeningsInput returns GetScreeningsOutput responds with OK`() {
-        val input = GetScreeningsInput(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1))
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val input = LocalDateTime.now().format(formatter)
         val expectedOutput = GetScreeningsOutput(List(2) {
             ScreeningInfo(it.toLong(), "Test$it", it, LocalDateTime.now())
         })
 
-        every { service.getScreenings(any()) } returns expectedOutput
+        every { service.getScreenings(any(), any()) } returns expectedOutput
 
-        mvc.post("/api/booking/screenings")
+        mvc.get("/api/booking/screenings?from=$input&&to=$input")
         {
             contentType = MediaType.APPLICATION_JSON
-            content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
@@ -65,14 +66,14 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
 
     @Test
     fun `get screenings with GetScreeningsInput catches IllegalStateException responds with NO CONTENT`() {
-        val input = GetScreeningsInput(LocalDateTime.now(), LocalDateTime.now())
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val input = LocalDateTime.now().format(formatter)
 
-        every { service.getScreenings(any()) } throws IllegalStateException()
+        every { service.getScreenings(any(),any()) } throws IllegalStateException()
 
-        mvc.post("/api/booking/screenings")
+        mvc.get("/api/booking/screenings?from=$input&&to=$input")
         {
             contentType = MediaType.APPLICATION_JSON
-            content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isNoContent }
