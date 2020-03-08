@@ -1,5 +1,6 @@
 package pl.komjago.ticketapp.controllers.booking
 
+import io.swagger.annotations.ApiParam
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -24,7 +25,9 @@ class BookingController(
 
     @GetMapping("/screenings")
     fun getScreenings(
+            @ApiParam(example = "2016-11-16 06:43")
             @Valid @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")from: LocalDateTime,
+            @ApiParam(example = "2016-11-16 06:43")
             @Valid @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")to: LocalDateTime
     ): GetScreeningsOutput {
         try {
