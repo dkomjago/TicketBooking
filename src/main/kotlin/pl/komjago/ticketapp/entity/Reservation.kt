@@ -16,16 +16,16 @@ data class Reservation(
         val id: Long?,
 
         @Column(nullable = false)
-        var buyerName: String,
+        val buyerName: String,
 
         @Column(nullable = false)
-        var buyerSurname: String,
+        val buyerSurname: String,
 
         @OneToOne
-        var screening: Screening,
+        val screening: Screening,
 
         @OneToMany
-        var tickets: List<Ticket>,
+        val tickets: List<Ticket>,
 
         @Column(nullable = false)
         var expirationTime: LocalDateTime
