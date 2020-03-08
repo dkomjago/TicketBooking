@@ -25,6 +25,7 @@ import pl.komjago.ticketapp.repository.SeatRepository
 import pl.komjago.ticketapp.repository.TicketRepository
 import pl.komjago.ticketapp.repository.TicketTypeRepository
 import pl.komjago.ticketapp.util.sumByBigDecimal
+import pl.komjago.ticketapp.util.toZloty
 import java.lang.IllegalArgumentException
 import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
@@ -151,7 +152,7 @@ class BookingServiceImpl(
                 ))
 
         return MakeReservationOutput(
-                Money.parse("PLN ${savedReservation.tickets.sumByBigDecimal { it.ticketType.price.amount }}"),
+                toZloty(savedReservation.tickets.sumByBigDecimal { it.ticketType.price.amount }),
                 savedReservation.expirationTime
         )
     }

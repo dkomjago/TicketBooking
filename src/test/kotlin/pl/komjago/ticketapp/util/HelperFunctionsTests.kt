@@ -16,6 +16,13 @@ class HelperFunctionsTests {
     }
 
     @Test
+    fun `toZloty parses BigDecimal returns Money with PLN currency`() {
+        val zloty = toZloty(BigDecimal(0.75))
+        assertEquals(Money.parse("PLN 0.75"), zloty)
+        assertEquals("PLN", zloty.currencyUnit.code)
+    }
+
+    @Test
     fun `sumByBigDecimal sums big decimals`() {
         val bigDecimalList = listOf(BigDecimal.TEN, BigDecimal.ONE)
         val bigDecimalSum = bigDecimalList.sumByBigDecimal { it }
