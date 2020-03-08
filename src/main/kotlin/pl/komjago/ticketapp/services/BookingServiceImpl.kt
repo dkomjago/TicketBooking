@@ -1,6 +1,5 @@
 package pl.komjago.ticketapp.services
 
-import org.joda.money.Money
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
