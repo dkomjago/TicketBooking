@@ -1,8 +1,9 @@
 package pl.komjago.ticketapp.controllers.booking
 
-import io.swagger.annotations.ApiParam
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import pl.komjago.ticketapp.controllers.booking.dto.ChooseScreeningOutput
@@ -14,21 +15,19 @@ import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
-import javax.validation.Valid
 
 
 @RestController
 @RequestMapping("/api/booking")
+@Validated
 class BookingController(
         private val bookingService: BookingService
 ) {
 
     @GetMapping("/screenings")
     fun getScreenings(
-            @ApiParam(example = "2016-11-16 06:43")
-            @Valid @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")from: LocalDateTime,
-            @ApiParam(example = "2016-11-16 06:43")
-            @Valid @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")to: LocalDateTime
+        @Parameter(example = "2016-11-16 06:43") @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") from: LocalDateTime,
+        @Parameter(example = "2016-11-16 06:43") @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") to: LocalDateTime
     ): GetScreeningsOutput {
         try {
             return bookingService.getScreenings(from, to)
@@ -39,7 +38,7 @@ class BookingController(
 
     @GetMapping("/screening/{id}")
     fun chooseScreening(
-            @Valid @PathVariable(name = "id") screeningId: Long
+        @PathVariable(name = "id") screeningId: Long
     ): ChooseScreeningOutput {
         try {
             return bookingService.chooseScreening(screeningId)
@@ -51,7 +50,7 @@ class BookingController(
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping("/book")
     fun makeReservation(
-            @Valid @RequestBody makeReservationInput: MakeReservationInput
+        @RequestBody makeReservationInput: MakeReservationInput
     ): MakeReservationOutput {
         try {
             return bookingService.makeReservation(makeReservationInput)

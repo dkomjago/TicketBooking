@@ -29,7 +29,6 @@ import pl.komjago.ticketapp.repository.ScreeningRepository
 import pl.komjago.ticketapp.repository.SeatRepository
 import pl.komjago.ticketapp.repository.TicketRepository
 import pl.komjago.ticketapp.repository.TicketTypeRepository
-import pl.komjago.ticketapp.util.toZloty
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.EntityNotFoundException
@@ -153,7 +152,7 @@ class BookingServiceTests {
 
         val ticketType = TicketType(1,
                 "test",
-                toZloty(0.50))
+                0.5.toBigDecimal())
 
         val ticketTypeInfo = ticketType.let {
             TicketTypeInfo(it.id,
@@ -211,7 +210,7 @@ class BookingServiceTests {
         )
 
         val expectedOutput = MakeReservationOutput(
-                toZloty(0.50),
+                0.5.toBigDecimal(),
                 LocalDateTime.now().plusHours(1)
         )
 
@@ -235,7 +234,7 @@ class BookingServiceTests {
 
         val ticketType = TicketType(1,
                 "test",
-                toZloty(0.50))
+                0.5.toBigDecimal())
 
         val seat = Seat(0, 1, 1)
 
@@ -413,7 +412,7 @@ class BookingServiceTests {
 
         val ticketType = TicketType(1,
                 "test",
-                toZloty(0.50))
+                0.5.toBigDecimal())
 
         val seatList = List(3) {
             Seat(it.toLong(), 1, it + 1)
@@ -467,7 +466,7 @@ class BookingServiceTests {
 
         val ticketType = TicketType(1,
                 "test",
-                toZloty(0.50))
+                0.5.toBigDecimal())
 
         val input = MakeReservationInput(
                 listOf(BookedSeatInfo(1, 0),
@@ -519,7 +518,7 @@ class BookingServiceTests {
 
         val ticketType = TicketType(1,
                 "test",
-                toZloty(0.50))
+                0.5.toBigDecimal())
 
         val seatList = List(3) {
             Seat(it.toLong(), 1, it + 1)

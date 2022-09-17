@@ -1,8 +1,6 @@
 package pl.komjago.ticketapp.entity
 
-import org.hibernate.annotations.Columns
-import org.hibernate.annotations.Type
-import org.joda.money.Money
+import java.math.BigDecimal
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -16,7 +14,6 @@ data class TicketType(
         @Column(nullable = false)
         var name: String,
 
-        @Columns(columns = [Column(name = "CURRENCY"), Column(name = "AMOUNT")])
-        @Type(type = "org.jadira.usertype.moneyandcurrency.joda.PersistentMoneyAmountAndCurrency")
-        var price: Money
+        @Column
+        var price: BigDecimal
 )

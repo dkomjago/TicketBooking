@@ -13,7 +13,6 @@ import pl.komjago.ticketapp.repository.MovieRepository
 import pl.komjago.ticketapp.repository.RoomRepository
 import pl.komjago.ticketapp.repository.ScreeningRepository
 import pl.komjago.ticketapp.repository.TicketTypeRepository
-import pl.komjago.ticketapp.util.toZloty
 import java.time.LocalDateTime
 import java.util.*
 
@@ -37,9 +36,9 @@ class DataLoader(
         })
 
         ticketTypeRepository.saveAll(listOf(
-                TicketType(0L, "adult", toZloty(25.00)),
-                TicketType(1L, "student", toZloty(18.00)),
-                TicketType(2L, "child", toZloty(12.50))
+                TicketType(0L, "adult", 25.toBigDecimal()),
+                TicketType(1L, "student", 18.toBigDecimal()),
+                TicketType(2L, "child", 12.5.toBigDecimal())
         ))
 
         val savedMovieList = movieRepository.saveAll(listOf(

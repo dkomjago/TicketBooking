@@ -23,8 +23,6 @@ import pl.komjago.ticketapp.repository.ScreeningRepository
 import pl.komjago.ticketapp.repository.SeatRepository
 import pl.komjago.ticketapp.repository.TicketRepository
 import pl.komjago.ticketapp.repository.TicketTypeRepository
-import pl.komjago.ticketapp.util.sumByBigDecimal
-import pl.komjago.ticketapp.util.toZloty
 import java.lang.IllegalArgumentException
 import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
@@ -98,7 +96,8 @@ class BookingServiceImpl(
             throw IllegalArgumentException("Duplicated seatId")
         }
 
-        val screening= screeningRepository.findByIdOrNull(makeReservationInput.screeningId) ?: throw EntityNotFoundException("Invalid screeningId")
+        val screening = screeningRepository.findByIdOrNull(makeReservationInput.screeningId)
+            ?: throw EntityNotFoundException("Invalid screeningId")
 
         if (LocalDateTime.now().plusMinutes(bookingEndsBeforeScreeningInMinutes).isAfter(screening.startingTime)) {
             throw IllegalArgumentException("$bookingEndsBeforeScreeningInMinutes minutes before screening")
@@ -106,7 +105,8 @@ class BookingServiceImpl(
 
         fun unpackSeatInfo(seatInfo: BookedSeatInfo): Pair<Seat, TicketType> {
             val seat = seatRepository.findByIdOrNull(seatInfo.seatId) ?: throw EntityNotFoundException("Invalid seatId")
-            val ticketType = ticketTypeRepository.findByIdOrNull(seatInfo.ticketTypeId) ?: throw EntityNotFoundException("Invalid ticketTypeId")
+            val ticketType = ticketTypeRepository.findByIdOrNull(seatInfo.ticketTypeId)
+                ?: throw EntityNotFoundException("Invalid ticketTypeId")
             return Pair(seat, ticketType)
         }
 
@@ -114,7 +114,8 @@ class BookingServiceImpl(
             unpackSeatInfo(it)
         }.toMap()
 
-        val reservedSeats = ticketRepository.findAllByScreeningId(makeReservationInput.screeningId).map { it.seat }.toList()
+        val reservedSeats =
+            ticketRepository.findAllByScreeningId(makeReservationInput.screeningId).map { it.seat }.toList()
 
         if (reservedSeats.any { selectedSeats.keys.contains(it) }) {
             throw IllegalArgumentException("Seat already booked")
@@ -129,30 +130,34 @@ class BookingServiceImpl(
                     previous = it.seatNumber
                     previousRow = it.seatRow
                 }
+
                 it.seatNumber - previous != 2 -> previous = it.seatNumber
                 else -> throw IllegalArgumentException("Empty place left between seats")
             }
         }
 
         val ticketList = ticketRepository.saveAll(selectedSeats.map {
-            Ticket(null,
-                    screening,
-                    it.key,
-                    it.value
+            Ticket(
+                null,
+                screening,
+                it.key,
+                it.value
             )
         })
         val savedReservation = reservationRepository.save(
-                Reservation(null,
-                        makeReservationInput.name,
-                        makeReservationInput.surname,
-                        screening,
-                        ticketList,
-                        LocalDateTime.now().plusHours(1)
-                ))
+            Reservation(
+                null,
+                makeReservationInput.name,
+                makeReservationInput.surname,
+                screening,
+                ticketList,
+                LocalDateTime.now().plusHours(1)
+            )
+        )
 
         return MakeReservationOutput(
-                toZloty(savedReservation.tickets.sumByBigDecimal { it.ticketType.price.amount }),
-                savedReservation.expirationTime
+            savedReservation.tickets.sumOf { it.ticketType.price },
+            savedReservation.expirationTime
         )
     }
 }

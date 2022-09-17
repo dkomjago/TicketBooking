@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import pl.komjago.ticketapp.entity.*
 import pl.komjago.ticketapp.repository.TicketRepository
-import pl.komjago.ticketapp.util.toZloty
 import java.time.LocalDateTime
 
 @DataJpaTest
@@ -64,7 +63,7 @@ class TicketRepositoryTests @Autowired constructor(private val ticketRepository:
                 ))
         screeningList.forEach { testEntityManager.persist(it) }
 
-        val ticketType = testEntityManager.persist(TicketType(1, "test", toZloty(0.50)))
+        val ticketType = testEntityManager.persist(TicketType(1, "test", 0.5.toBigDecimal()))
 
         val ticketList = List(ticketCount) {
             Ticket(null,

@@ -27,7 +27,6 @@ import pl.komjago.ticketapp.entity.Seat
 import pl.komjago.ticketapp.entity.TicketType
 
 import pl.komjago.ticketapp.services.BookingService
-import pl.komjago.ticketapp.util.toZloty
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.persistence.EntityNotFoundException
@@ -54,7 +53,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             contentType = MediaType.APPLICATION_JSON
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content {
                 contentType(MediaType.APPLICATION_JSON)
                 contentTypeCompatibleWith("application/json")
@@ -75,7 +74,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             contentType = MediaType.APPLICATION_JSON
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }
     }
 
@@ -103,7 +102,8 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
 
         val ticketType = TicketType(1,
                 "test",
-                toZloty(0.50))
+                0.5.toBigDecimal()
+        )
 
         val ticketTypeInfo = ticketType.let {
             TicketTypeInfo(it.id,
@@ -131,7 +131,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
 
         mvc.get("/api/booking/screening/$screeningId")
                 .andExpect {
-                    status { isOk }
+                    status { isOk() }
                     content {
                         contentType(MediaType.APPLICATION_JSON)
                         contentTypeCompatibleWith("application/json")
@@ -148,7 +148,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
 
         mvc.get("/api/booking/screening/$screeningId")
                 .andExpect {
-                    status { isBadRequest }
+                    status { isBadRequest() }
                 }
     }
 
@@ -162,7 +162,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
         )
 
         val expectedOutput = MakeReservationOutput(
-                toZloty(0.50),
+                0.5.toBigDecimal(),
                 LocalDateTime.now().plusHours(1)
         )
 
@@ -174,7 +174,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content {
                 contentType(MediaType.APPLICATION_JSON)
                 contentTypeCompatibleWith("application/json")
@@ -200,7 +200,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -221,7 +221,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -240,7 +240,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -259,7 +259,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -278,7 +278,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -297,7 +297,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -311,7 +311,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
         )
 
         val expectedOutput = MakeReservationOutput(
-                toZloty(0.50),
+                0.5.toBigDecimal(),
                 LocalDateTime.now()
         )
 
@@ -323,7 +323,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
         }
     }
 
@@ -342,7 +342,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -361,7 +361,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -375,7 +375,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
         )
 
         val expectedOutput = MakeReservationOutput(
-                toZloty(0.50),
+                0.50.toBigDecimal(),
                 LocalDateTime.now()
         )
 
@@ -387,7 +387,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
         }
     }
 
@@ -406,7 +406,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -425,7 +425,7 @@ class BookingControllerTests @Autowired constructor(private val mvc: MockMvc, pr
             content = mapper.writeValueAsString(input)
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 }

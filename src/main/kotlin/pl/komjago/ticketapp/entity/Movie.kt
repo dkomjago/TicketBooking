@@ -16,7 +16,7 @@ data class Movie(
         @Column(nullable = false)
         var title: String,
 
-        @Column(nullable = false)
+        @Column(name="movie_cast", nullable = false)
         var cast: String,
 
         @Column(nullable = false)
