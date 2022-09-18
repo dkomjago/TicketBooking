@@ -1,0 +1,228 @@
+databaseChangeLog:
+ - changeSet:
+    id: 1
+    author: dkomjago
+    changes:
+     - createTable:
+        tableName: movie
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: title
+            type: varchar(255)
+            constraints:
+             nullable: false
+         - column:
+            name: movie_cast
+            type: varchar(2000)
+         - column:
+            name: director
+            type: varchar(100)
+         - column:
+            name: description
+            type: varchar(4000)
+         - column:
+            name: duration_minutes
+            type: smallint
+     - createTable:
+        tableName: room
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: room_name
+            type: varchar(100)
+            constraints:
+             nullable: false
+         - column:
+            name: room_type
+            type: varchar(50)
+            constraints:
+             nullable: false
+     - createTable:
+        tableName: screening
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: room_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_room__screening
+             references: room(id)
+         - column:
+            name: movie_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_movie__screening
+             references: movie(id)
+         - column:
+            name: starting_time
+            type: timestamp
+            constraints:
+             nullable: false
+     - createTable:
+        tableName: reservation
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: buyer_name
+            type: varchar(100)
+            constraints:
+             nullable: false
+         - column:
+            name: expiration_time
+            type: timestamp
+            constraints:
+             nullable: false
+     - createTable:
+        tableName: seat
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: room_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_room__seat
+             references: room(id)
+         - column:
+            name: seat_row
+            type: char(1)
+            constraints:
+             nullable: false
+         - column:
+            name: seat_number
+            type: smallint
+            constraints:
+             nullable: false
+     - createTable:
+        tableName: ticket_type
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: type_name
+            type: varchar(100)
+            constraints:
+             nullable: false
+         - column:
+            name: price
+            type: decimal(19, 4)
+            constraints:
+             nullable: false
+     - createTable:
+        tableName: ticket
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: reservation_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_reservation__ticket
+             references: reservation(id)
+         - column:
+            name: screening_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_screening__ticket
+             references: screening(id)
+         - column:
+            name: seat_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_seat__ticket
+             references: seat(id)
+         - column:
+            name: ticket_type_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_ticket__type_ticket
+             references: ticket_type(id)
+     - createTable:
+        tableName: seat_details
+        columns:
+         - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+             primaryKey: true
+             nullable: false
+         - column:
+            name: seat_id
+            type: int
+            constraints:
+             nullable: false
+             foreignKeyName: fk_seat__seat_details
+             references: seat(id)
+         - column:
+            name: seat_type
+            type: varchar(50)
+            constraints:
+             nullable: false
+         - column:
+            name: cost_multiplier
+            type: decimal(5,4)
+            constraints:
+             nullable: false
+         - column:
+            name: is_available
+            type: boolean
+            constraints:
+             nullable: false
+ - changeSet:
+    id: 2
+    author: dkomjago
+    changes:
+     - sqlFile:
+        dbms: 'h2'
+        endDelimiter: \nGO
+        splitStatements: true
+        path: db/populate.sql
+        stripComments: true
