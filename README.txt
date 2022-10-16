@@ -13,7 +13,7 @@
 
 ///API INFO
 endpoints:
-1.getting list of all screenings in a time frame -> /api/booking/screenings GET requires query parameters, example: from=2016-11-16 06:43 to=2020-11-16 06:43
+1.getting list of all screenings in a time frame -> /api/booking/screenings GET requires query parameters, example: from=2016-11-16 06:43 to=2030-11-16 06:43
 2.getting screening information -> /api/booking/screening/{screeningId} GET requires valid screening id as path argument
 3.booking seats -> /api/booking/book POST  requires json, example:{\"selectedSeats\": [{\"ticketTypeId\": 0,\"seatId\": 1}],\"screeningId\": $screeningId,\"name\":\"String\",\"surname\":\"String\"}
 

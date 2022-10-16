@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 
 data class ChooseScreeningOutput(
-        val id: Long,
+        val id: Int,
         val movie: MovieInfo,
         val room: RoomInfo,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")

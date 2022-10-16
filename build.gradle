@@ -1,0 +1,97 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id("org.springframework.boot") version "$springBootVersion"
+    id("io.spring.dependency-management") version "1.0.13.RELEASE"
+    id("org.jetbrains.kotlin.jvm") version "$kotlinVersion"
+    id("org.jetbrains.kotlin.plugin.spring") version "$kotlinVersion"
+    id("org.jetbrains.kotlin.plugin.jpa") version "$kotlinVersion"
+}
+
+repositories {
+    maven { url = uri("https://repo.spring.io/release") }
+    mavenCentral()
+}
+
+sourceSets {
+    unitTest {
+        test.kotlin.srcDir file("src/test/unit/kotlin")
+        compileClasspath += test.output + main.output
+        runtimeClasspath += output + compileClasspath
+    }
+    integrationTest {
+        test.kotlin.srcDir file("src/test/integration/kotlin")
+        compileClasspath += test.output + main.output
+        runtimeClasspath += output + compileClasspath
+    }
+    e2eTest {
+        test.kotlin.srcDir file("src/test/e2e/kotlin")
+        compileClasspath += test.output + main.output
+        runtimeClasspath += output + compileClasspath
+    }
+    utils {
+        test.kotlin.srcDir file("src/test/utils/kotlin")
+        compileClasspath += test.output + main.output
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+dependencies {
+    implementation("me.yaman.can:spring-boot-webflux-h2-console:0.0.1")
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1')
+    implementation('org.yaml:snakeyaml:1.33')
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-validation:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-webflux:$springBootVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc:$springBootVersion")
+    implementation("org.liquibase:liquibase-core:4.16.1")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.11")
+    implementation("org.springdoc:springdoc-openapi-data-rest:1.6.11")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.4")
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.11")
+    runtimeOnly("io.r2dbc:r2dbc-h2:1.0.0.RC1")
+    runtimeOnly('com.h2database:h2:2.1.214')
+    testImplementation("com.natpryce:hamkrest:1.8.0.1")
+    testImplementation('io.mockk:mockk:1.13.2')
+    testImplementation("com.ninja-squad:springmockk:3.1.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+}
+
+group = "pl.komjago"
+version = "0.0.1-SNAPSHOT"
+description = "ticket-booking"
+java.sourceCompatibility = JavaVersion.VERSION_11
+
+tasks.withType(KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+tasks.register("integrationTest", Test) {
+    description = "Runs integration tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath + sourceSets["integrationTest"].output
+    shouldRunAfter("test")
+}
+
+tasks.register("e2eTest", Test) {
+    description = "Runs end to end tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets["e2eTest"].output.classesDirs
+    classpath = sourceSets["e2eTest"].runtimeClasspath
+    shouldRunAfter("integrationTest")
+    onlyIf { project.hasProperty("slowTest") }
+}
+
+tasks.check { dependsOn(integrationTest, e2eTest) }

@@ -6,8 +6,6 @@ import javax.validation.ConstraintValidatorContext
 class NameValidator : ConstraintValidator<NameConstraint, String> {
     override fun initialize(nameConstraint: NameConstraint) {}
 
-    override fun isValid(name: String, cxt: ConstraintValidatorContext?): Boolean {
-        val nameRegex = Regex("\\p{Lu}\\p{Ll}{2,}")
-        return nameRegex.matches(name)
-    }
+    override fun isValid(name: String, cxt: ConstraintValidatorContext?): Boolean  =
+        "(?:\\p{Lu}\\p{Ll}+[ -]?)+".toRegex().matches(name)
 }
