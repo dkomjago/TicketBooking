@@ -1,10 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     id("org.springframework.boot") version "$springBootVersion"
     id("io.spring.dependency-management") version "1.0.13.RELEASE"
-    id("org.springframework.experimental.aot") version "0.12.1"
     id("org.jetbrains.kotlin.jvm") version "$kotlinVersion"
     id("org.jetbrains.kotlin.plugin.spring") version "$kotlinVersion"
     id("org.jetbrains.kotlin.plugin.jpa") version "$kotlinVersion"
@@ -52,6 +50,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-kotlin:1.6.11")
     implementation("org.springdoc:springdoc-openapi-data-rest:1.6.11")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.4")
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.11")
     runtimeOnly("io.r2dbc:r2dbc-h2:1.0.0.RC1")
     runtimeOnly('com.h2database:h2:2.1.214')
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
@@ -96,8 +95,3 @@ tasks.register("e2eTest", Test) {
 }
 
 tasks.check { dependsOn(integrationTest, e2eTest) }
-
-tasks.withType(BootBuildImage) {
-    builder = "paketobuildpacks/builder:tiny"
-    environment = ["BP_NATIVE_IMAGE" : "true"]
-}
